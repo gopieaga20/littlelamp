@@ -30,6 +30,13 @@ Postgres isn't reachable, so you can preview the site immediately and wire up th
 whenever it's ready. Once Postgres is live, seed it and all content becomes editable via
 `npm run db:studio` (Prisma Studio) without a code deploy.
 
+> **Local dev database:** already set up against the machine's local PostgreSQL 18 install
+> (`postgresql://postgres:***@127.0.0.1:5432/littlelamp`), schema pushed and seeded. `.env` holding
+> that connection string is gitignored and stays local-only — anyone else cloning this repo needs
+> their own Postgres instance and `.env` (steps above). For a shared/production database, set
+> `DATABASE_URL` in Vercel's project environment variables instead and run `db:push`/`db:seed`
+> against that connection string.
+
 ## Database design
 
 See [`prisma/schema.prisma`](./prisma/schema.prisma) for the full schema. Summary:
