@@ -1,0 +1,96 @@
+import { PrismaClient } from "@prisma/client";
+import { services } from "../src/data/services";
+import { pricingPackages } from "../src/data/pricing";
+import { testimonials } from "../src/data/testimonials";
+
+const prisma = new PrismaClient();
+
+async function main() {
+  console.log("Seeding services...");
+  for (const s of services) {
+    await prisma.service.upsert({
+      where: { slug: s.slug },
+      update: {
+        title: s.title,
+        classRange: s.classRange,
+        summary: s.summary,
+        description: s.description,
+        icon: s.icon,
+        order: s.order,
+      },
+      create: {
+        slug: s.slug,
+        title: s.title,
+        classRange: s.classRange,
+        summary: s.summary,
+        description: s.description,
+        icon: s.icon,
+        order: s.order,
+        features: {
+          create: s.features.map((label, i) => ({ label, order: i })),
+        },
+      },
+    });
+  }
+
+  console.log("Seeding pricing packages...");
+  for (const p of pricingPackages) {
+    await prisma.pricingPackage.upsert({
+      where: { slug: p.slug },
+      update: {
+        emoji: p.emoji,
+        name: p.name,
+        hours: p.hours,
+        priceInPaise: p.priceInPaise,
+        bestFor: p.bestFor,
+        order: p.order,
+      },
+      create: {
+        slug: p.slug,
+        emoji: p.emoji,
+        name: p.name,
+        hours: p.hours,
+        priceInPaise: p.priceInPaise,
+        bestFor: p.bestFor,
+        order: p.order,
+      },
+    });
+  }
+
+  console.log("Seeding testimonials...");
+  for (const [i, t] of testimonials.entries()) {
+    const existing = await prisma.testimonial.findFirst({ where: { parentName: t.parentName } });
+    if (existing) {
+      await prisma.testimonial.update({
+        where: { id: existing.id },
+        data: {
+          studentInfo: t.studentInfo,
+          quote: t.quote,
+          rating: t.rating,
+          order: t.order,
+        },
+      });
+    } else {
+      await prisma.testimonial.create({
+        data: {
+          parentName: t.parentName,
+          studentInfo: t.studentInfo,
+          quote: t.quote,
+          rating: t.rating,
+          order: i,
+        },
+      });
+    }
+  }
+
+  console.log("Seed complete.");
+}
+
+main()
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

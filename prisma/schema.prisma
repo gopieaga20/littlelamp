@@ -1,0 +1,159 @@
+// LittleLamp — Prisma schema (PostgreSQL)
+//
+// Scope: this site has no user accounts/auth. The database exists to hold
+// (a) editable marketing content (services, pricing, testimonials, blog)
+// so the team can update copy without a code deploy, and
+// (b) leads/bookings captured from the site's forms.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Content models (editable via Prisma Studio / a future lightweight admin)
+// ---------------------------------------------------------------------------
+
+model Service {
+  id          String   @id @default(cuid())
+  slug        String   @unique // e.g. "board-exam-prep"
+  title       String
+  classRange  String // e.g. "Class 9–10"
+  summary     String // one-line teaser used on /services cards
+  description String // longer copy for the detail page
+  icon        String // lucide-react icon name
+  features    ServiceFeature[]
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+}
+
+model ServiceFeature {
+  id        String  @id @default(cuid())
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  serviceId String
+  label     String
+  order     Int     @default(0)
+
+  @@index([serviceId])
+}
+
+model PricingPackage {
+  id          String   @id @default(cuid())
+  slug        String   @unique // e.g. "starter-pack"
+  emoji       String // e.g. "⭐"
+  name        String // e.g. "Starter Pack"
+  hours       String // e.g. "5 hrs" (kept as string: "10 min" etc.)
+  priceInPaise Int     // 0 for free intro; store money as integer paise to avoid float issues
+  bestFor     String // e.g. "Class 2–5"
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+}
+
+model Testimonial {
+  id          String   @id @default(cuid())
+  parentName  String
+  studentInfo String // e.g. "Parent of a Class 8 student"
+  quote       String
+  avatarUrl   String?
+  rating      Int      @default(5)
+  order       Int      @default(0)
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+}
+
+model BlogPost {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  excerpt     String
+  content     String // markdown/MDX body
+  coverImage  String?
+  publishedAt DateTime?
+  isPublished Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([publishedAt])
+}
+
+model SiteSetting {
+  key   String @id // e.g. "footer.instagramUrl"
+  value String
+}
+
+// ---------------------------------------------------------------------------
+// Lead capture / booking
+// ---------------------------------------------------------------------------
+
+enum LeadSource {
+  CONTACT_FORM
+  BOOKING_FORM
+  WHATSAPP
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  BOOKED
+  CONVERTED
+  CLOSED_LOST
+}
+
+model Lead {
+  id           String     @id @default(cuid())
+  parentName   String
+  email        String?
+  phone        String
+  childClass   String // e.g. "Class 9"
+  message      String?
+  source       LeadSource @default(CONTACT_FORM)
+  status       LeadStatus @default(NEW)
+  utmSource    String?
+  utmCampaign  String?
+  booking      Booking?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+// A Booking is created once a Lead picks a slot for the free intro call.
+// If/when Cal.com or Calendly owns scheduling, `externalEventId` links back
+// to that provider's event so this stays the source of truth for the CRM view.
+model Booking {
+  id              String        @id @default(cuid())
+  lead            Lead          @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId          String        @unique
+  scheduledAt     DateTime
+  durationMinutes Int           @default(10)
+  provider        String        @default("cal.com")
+  externalEventId String?
+  status          BookingStatus @default(SCHEDULED)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([scheduledAt])
+}
+
+enum BookingStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
