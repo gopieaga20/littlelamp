@@ -27,3 +27,10 @@ next-env.d.ts
 # generated review deliverables (regenerate via scripts/build_review_pdf.py)
 /review-screenshots/
 /LittleLamp-Website-Review.pdf
+.vercel
+.env*
+
+# auto-installed agent skill docs from `vercel integration add neon`
+/.agents/
+/.claude/skills/
+/skills-lock.json
