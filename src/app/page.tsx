@@ -4,8 +4,10 @@ import { BookingCta } from "@/components/BookingCta";
 import { ServiceCard } from "@/components/ServiceCard";
 import { IconTextCard } from "@/components/IconTextCard";
 import { TestimonialCard } from "@/components/TestimonialCard";
+import { PricingSection } from "@/components/PricingSection";
 import { getServices, getTestimonials } from "@/lib/content";
 import { painPoints, trustBadges } from "@/data/page-content";
+import { siteConfig } from "@/lib/site-config";
 
 export default async function HomePage() {
   const [services, testimonials] = await Promise.all([getServices(), getTestimonials()]);
@@ -17,7 +19,7 @@ export default async function HomePage() {
       <section className="relative overflow-hidden">
         <div className="section grid items-center gap-12 lg:grid-cols-2">
           <div>
-            <span className="eyebrow">Guiding Every Child to Their Best Future</span>
+            <span className="eyebrow">{siteConfig.tagline}</span>
             <h1 className="text-4xl font-bold leading-tight sm:text-5xl">
               Personalized guidance for every stage of your child&apos;s school journey
             </h1>
@@ -124,6 +126,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Pricing */}
+      <PricingSection subtitle="No hidden fees — pay only for the hours you use." />
 
       {/* Testimonial highlight */}
       {featuredTestimonial && (

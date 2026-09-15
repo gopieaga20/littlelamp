@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { LeadForm } from "@/components/LeadForm";
 import { BookingEmbed } from "@/components/BookingEmbed";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { PricingSection } from "@/components/PricingSection";
+import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Book a Free Session",
@@ -23,6 +25,8 @@ export default function BookPage() {
         </div>
       </section>
 
+      <PricingSection compact eyebrow="Pricing" title="What it costs" />
+
       <section>
         <div className="section grid gap-10 lg:grid-cols-5 lg:items-start">
           <div className="lg:col-span-3">
@@ -39,6 +43,7 @@ export default function BookPage() {
               <div className="mt-4 flex justify-center">
                 <WhatsAppButton />
               </div>
+              <p className="mt-2 text-xs text-ink-400">Available {siteConfig.availableHours}</p>
             </div>
           </div>
         </div>

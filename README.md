@@ -44,7 +44,7 @@ See [`prisma/schema.prisma`](./prisma/schema.prisma) for the full schema. Summar
 | Model | Purpose |
 |---|---|
 | `Service` / `ServiceFeature` | The 4 service segments shown on `/services` and their bullet features |
-| `PricingPackage` | Editable pricing table (`/pricing`) — money stored as integer paise |
+| `PricingPackage` | Editable pricing shown on Home, each service page, and `/book` — money stored as integer paise |
 | `Testimonial` | Parent testimonials (`/testimonials`, homepage highlight) |
 | `BlogPost` | Optional blog/resources content |
 | `SiteSetting` | Free-form key/value store for footer/social links etc. |
@@ -66,7 +66,8 @@ No user-auth tables exist — the requirements explicitly rule out parent/studen
 These are stubbed with clear `TODO` comments so the app runs today and only needs config, not
 code changes, once accounts exist:
 
-- `src/lib/site-config.ts` — real phone/email/WhatsApp number, Cal.com booking URL, social links
+- `src/lib/site-config.ts` — Cal.com booking URL, social links, production domain (`url`), address
+  (phone/email/WhatsApp are now real)
 - `src/lib/notify.ts` — Resend/SendGrid API key for lead-notification emails
 - GA4 / Meta Pixel — not yet wired in; add via `@next/third-parties` in `src/app/layout.tsx` once
   tracking IDs exist

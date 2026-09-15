@@ -4,13 +4,14 @@
 
 export const siteConfig = {
   name: "LittleLamp",
-  tagline: "Guiding Every Child to Their Best Future",
+  tagline: "Empowering Every Child to Their Highest Potential & Achieve Greatness",
   description:
     "Personalized study-habit coaching, board-exam prep, and career counseling for Class 2–12 students in India.",
   url: "https://littlelamp.example.com", // TODO: set production domain
-  phone: "+91 90000 00000", // TODO: real business number
-  whatsappNumber: "919000000000", // TODO: E.164 without '+' for wa.me links
-  email: "hello@littlelamp.example.com", // TODO: real inbox
+  phone: "+91 94440 86921",
+  whatsappNumber: "919444086921",
+  email: "littlelamp1001@gmail.com",
+  availableHours: "Mon–Fri, 7:30 PM – 9:00 PM",
   calBookingUrl: "https://cal.com/littlelamp/intro-call", // TODO: real Cal.com event link
   social: {
     instagram: "https://instagram.com/littlelamp", // TODO
@@ -24,7 +25,6 @@ export const navLinks = [
   { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
   { href: "/how-it-works", label: "How It Works" },
-  { href: "/pricing", label: "Pricing" },
   { href: "/testimonials", label: "Testimonials" },
   { href: "/blog", label: "Blog" },
 ];
