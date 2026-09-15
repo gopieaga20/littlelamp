@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
 import { DynamicIcon } from "@/components/DynamicIcon";
 import { BookingCta } from "@/components/BookingCta";
+import { PricingSection } from "@/components/PricingSection";
 import { getServiceBySlug, getServices } from "@/lib/content";
 
 export async function generateStaticParams() {
@@ -58,6 +59,8 @@ export default async function ServiceDetailPage({ params }: { params: { slug: st
           </div>
         </div>
       </section>
+
+      <PricingSection compact eyebrow="Pricing" title="What this costs" />
     </>
   );
 }

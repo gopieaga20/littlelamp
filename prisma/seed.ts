@@ -8,29 +8,43 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("Seeding services...");
   for (const s of services) {
-    await prisma.service.upsert({
-      where: { slug: s.slug },
-      update: {
-        title: s.title,
-        classRange: s.classRange,
-        summary: s.summary,
-        description: s.description,
-        icon: s.icon,
-        order: s.order,
-      },
-      create: {
-        slug: s.slug,
-        title: s.title,
-        classRange: s.classRange,
-        summary: s.summary,
-        description: s.description,
-        icon: s.icon,
-        order: s.order,
-        features: {
-          create: s.features.map((label, i) => ({ label, order: i })),
+    const existingService = await prisma.service.findUnique({ where: { slug: s.slug } });
+    if (existingService) {
+      // A plain `upsert` can't express "replace the features relation on
+      // update" — its `update` payload has no `deleteMany`/`create` slot for
+      // a nested relation the way `create` does, so features would silently
+      // never sync on re-seed. Do it explicitly instead.
+      await prisma.service.update({
+        where: { slug: s.slug },
+        data: {
+          title: s.title,
+          classRange: s.classRange,
+          summary: s.summary,
+          description: s.description,
+          icon: s.icon,
+          order: s.order,
+          features: {
+            deleteMany: {},
+            create: s.features.map((label, i) => ({ label, order: i })),
+          },
         },
-      },
-    });
+      });
+    } else {
+      await prisma.service.create({
+        data: {
+          slug: s.slug,
+          title: s.title,
+          classRange: s.classRange,
+          summary: s.summary,
+          description: s.description,
+          icon: s.icon,
+          order: s.order,
+          features: {
+            create: s.features.map((label, i) => ({ label, order: i })),
+          },
+        },
+      });
+    }
   }
 
   console.log("Seeding pricing packages...");
@@ -56,6 +70,12 @@ async function main() {
       },
     });
   }
+  // Remove packages that have since been dropped from the seed data (e.g. the
+  // old tiered packages replaced by a flat hourly rate) — upsert alone never
+  // deletes rows whose slug no longer appears above.
+  await prisma.pricingPackage.deleteMany({
+    where: { slug: { notIn: pricingPackages.map((p) => p.slug) } },
+  });
 
   console.log("Seeding testimonials...");
   for (const [i, t] of testimonials.entries()) {

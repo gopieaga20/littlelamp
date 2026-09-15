@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { BookingCta } from "@/components/BookingCta";
 import { whyChooseUs } from "@/data/page-content";
 import { IconTextCard } from "@/components/IconTextCard";
+import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -15,7 +16,7 @@ export default function AboutPage() {
       <section className="bg-white">
         <div className="section max-w-3xl text-center">
           <span className="eyebrow">Who We Are</span>
-          <h1 className="text-4xl font-bold sm:text-5xl">Guiding every child to their best future</h1>
+          <h1 className="text-4xl font-bold sm:text-5xl">{siteConfig.tagline}</h1>
           <p className="mt-5 text-lg text-ink-500">
             LittleLamp was founded on a simple belief: every child does better with a personalized
             plan and a guide who genuinely knows them — not a one-size-fits-all worksheet or a
@@ -25,6 +26,46 @@ export default function AboutPage() {
       </section>
 
       <section>
+        <div className="section grid gap-12 lg:grid-cols-2 lg:items-center">
+          <div>
+            <h2 className="text-3xl font-bold">Meet the Founder</h2>
+            <p className="mt-4 text-ink-500">
+              LittleLamp is led by <strong className="text-ink-800">Rani Sherin Varghese</strong>, a
+              Chemical Engineering professional with a B.Tech from NIT Warangal and over 25 years of
+              distinguished industry experience, currently serving as Country Head of a multinational
+              company. Alongside her professional career, she has had a deep passion for teaching and
+              mentoring children, bringing exceptional determination, concentration, discipline, and
+              focused guidance to their learning and development.
+            </p>
+            <p className="mt-4 text-ink-500">
+              Her greatest testament to this dedication is her achievement as a working mother in
+              guiding her own son toward IIT admission through an All-India JEE Advanced rank of
+              91 — demonstrating the same extraordinary commitment to both family and career that
+              LittleLamp now brings to every family it works with.
+            </p>
+          </div>
+          <div className="card">
+            <h3 className="font-semibold text-ink-800">Her son&apos;s journey — the proof it works</h3>
+            <p className="mt-2 text-sm text-ink-500">
+              <strong className="text-ink-800">Andrews George Varghese</strong> is an accomplished
+              academic and competitive-achievement scholar:
+            </p>
+            <ul className="mt-4 space-y-3 text-sm text-ink-600">
+              <li>KVPY rank holder and National Talent Search Scholarship (NTSE) holder</li>
+              <li>National-level International Olympiad participant</li>
+              <li>2nd rank internationally in the International Spell Bee competition</li>
+              <li>
+                JEE Advanced All-India Rank 91 → B.Tech in Electrical Engineering (minor in Computer
+                Science) at IIT Bombay, graduating with a 9.69 CGPA
+              </li>
+              <li>2.5 years at Samsung, South Korea, through campus placement</li>
+              <li>Currently pursuing an MS in Computer Science at Carnegie Mellon University</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white">
         <div className="section grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
             <h2 className="text-3xl font-bold">Our Mission</h2>
@@ -51,7 +92,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-white">
+      <section>
         <div className="section">
           <div className="mx-auto max-w-2xl text-center">
             <span className="eyebrow">Why Choose Us</span>
@@ -65,7 +106,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section>
+      <section className="bg-white">
         <div className="section text-center">
           <h2 className="text-3xl font-bold">Ready to meet your counselor?</h2>
           <div className="mt-6">

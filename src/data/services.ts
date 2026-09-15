@@ -50,11 +50,11 @@ export const services: ServiceSeed[] = [
     classRange: "Class 11–12",
     summary: "Clarity at the crossroads — stream, exams, and career direction.",
     description:
-      "Class 11 and 12 come with high-stakes decisions: which stream, which competitive exams, which career path. Our counselors combine aptitude insights with honest conversation to help your child (and you) make sense of the options — JEE, NEET, or otherwise — without outsourcing the decision to guesswork.",
+      "Class 11 and 12 come with high-stakes decisions: which stream, which competitive exams, which career path. Our counselors combine aptitude insights with honest conversation to help your child (and you) make sense of the options — JEE, NEET, CLAT, GRE, TOEFL, or otherwise — without outsourcing the decision to guesswork.",
     icon: "Compass",
     features: [
       "Aptitude-informed stream & career guidance",
-      "Competitive exam planning (JEE/NEET/other)",
+      "Competitive exam planning (JEE/NEET/CLAT/GRE/TOEFL/other)",
       "One-on-one sessions with experienced counselors",
     ],
     order: 3,

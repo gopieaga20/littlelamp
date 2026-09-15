@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram, Facebook, Mail, Phone, MapPin } from "lucide-react";
+import { Instagram, Facebook, Mail, Phone, MapPin, Clock } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { siteConfig, navLinks } from "@/lib/site-config";
 
@@ -68,6 +68,10 @@ export function Footer() {
             <li className="flex items-start gap-2">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary-600" />
               <span>{siteConfig.address}</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <Clock className="mt-0.5 h-4 w-4 shrink-0 text-primary-600" />
+              <span>{siteConfig.availableHours}</span>
             </li>
           </ul>
         </div>
