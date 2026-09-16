@@ -17,7 +17,7 @@ export const siteConfig = {
     instagram: "https://instagram.com/littlelamp", // TODO
     facebook: "https://facebook.com/littlelamp", // TODO
   },
-  address: "Tamil Nadu, India", // TODO: real service area / address
+  address: "Chennai, Tamil Nadu, India", // TODO: real service area / address
 };
 
 export const navLinks = [
