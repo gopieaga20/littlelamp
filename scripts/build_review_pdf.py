@@ -26,13 +26,12 @@ PAGE_TITLES = {
     "06-service-career-counseling": "Service Detail — Career Counseling",
     "07-service-teacher-recommendations": "Service Detail — Teacher Recommendations",
     "08-how-it-works": "How It Works",
-    "09-pricing": "Pricing",
-    "10-testimonials": "Testimonials",
-    "11-book": "Book a Free Session",
-    "12-blog": "Blog",
-    "13-blog-post": "Blog — Sample Post",
-    "14-privacy": "Privacy Policy",
-    "15-terms": "Terms of Service",
+    "09-testimonials": "Testimonials",
+    "10-book": "Book a Free Session",
+    "11-blog": "Blog",
+    "12-blog-post": "Blog — Sample Post",
+    "13-privacy": "Privacy Policy",
+    "14-terms": "Terms of Service",
 }
 
 ROUTES = {
@@ -44,13 +43,12 @@ ROUTES = {
     "06-service-career-counseling": "/services/career-counseling",
     "07-service-teacher-recommendations": "/services/teacher-recommendations",
     "08-how-it-works": "/how-it-works",
-    "09-pricing": "/pricing",
-    "10-testimonials": "/testimonials",
-    "11-book": "/book",
-    "12-blog": "/blog",
-    "13-blog-post": "/blog/building-a-study-routine-that-sticks",
-    "14-privacy": "/privacy",
-    "15-terms": "/terms",
+    "09-testimonials": "/testimonials",
+    "10-book": "/book",
+    "11-blog": "/blog",
+    "12-blog-post": "/blog/building-a-study-routine-that-sticks",
+    "13-privacy": "/privacy",
+    "14-terms": "/terms",
 }
 
 OUTPUT = "LittleLamp-Website-Review.pdf"
@@ -112,7 +110,7 @@ def cover_page(c, page_w, page_h, total_screens):
     c.setFont("Helvetica-Oblique", 9)
     c.drawCentredString(
         page_w / 2, 60,
-        "Draft for client review — booking widget, pricing, and contact details are placeholders."
+        "Draft for client review — the booking calendar widget (Cal.com) is still a placeholder."
     )
     c.showPage()
 
@@ -122,10 +120,19 @@ def main():
     files = [f for f in files if os.path.splitext(os.path.basename(f))[0] in PAGE_TITLES]
     total = len(files)
 
+    cover_w, cover_h = letter
     c = canvas.Canvas(OUTPUT, pagesize=letter)
-    page_w, page_h = letter
+    cover_page(c, cover_w, cover_h, total)
 
-    cover_page(c, page_w, page_h, total)
+    # Each screenshot gets its own page, sized to fit the WHOLE image at a
+    # fixed width — never split into chunks. Splitting by a fixed pixel
+    # height cuts straight through headings/cards wherever the math lands,
+    # with no regard for the page's actual content boundaries (confirmed
+    # bug: it sliced the "Who We Are" heading and the pricing cards in half
+    # on the long Home page). A single tall PDF page scrolls fine in any
+    # viewer and keeps every screenshot visually intact.
+    page_w = letter[0]
+    avail_w = page_w - 2 * MARGIN
 
     for i, f in enumerate(files, start=1):
         key = os.path.splitext(os.path.basename(f))[0]
@@ -135,49 +142,21 @@ def main():
         img = Image.open(f)
         img_w, img_h = img.size
 
-        avail_w = page_w - 2 * MARGIN
-        avail_h_first_chunk = page_h - HEADER_H - FOOTER_H - 10
-
         scale = avail_w / img_w
         scaled_h = img_h * scale
+        page_h = HEADER_H + FOOTER_H + scaled_h + 10
 
-        max_h_px = avail_h_first_chunk / scale  # how many source px fit in one page height
-
-        if scaled_h <= avail_h_first_chunk:
-            # Fits on a single page
-            c.drawImage(
-                f, MARGIN, page_h - HEADER_H - scaled_h - 5,
-                width=avail_w, height=scaled_h, preserveAspectRatio=True, mask="auto"
-            )
-            draw_header(c, page_w, page_h, title, route, i, total)
-            draw_footer(c, page_w, i, total)
-            c.showPage()
-        else:
-            # Split tall screenshots across multiple pages. Distribute height
-            # evenly across chunks (rather than fixed-size chunks with a
-            # small leftover sliver) so no page ends up mostly blank.
-            n_chunks = int((img_h // max_h_px) + (1 if img_h % max_h_px else 0))
-            even_chunk_h = img_h / n_chunks
-            for chunk in range(n_chunks):
-                top_px = int(chunk * even_chunk_h)
-                bottom_px = int(min((chunk + 1) * even_chunk_h, img_h))
-                crop = img.crop((0, top_px, img_w, bottom_px))
-                tmp_path = f"_chunk_{key}_{chunk}.png"
-                crop.save(tmp_path)
-
-                chunk_h_pt = (bottom_px - top_px) * scale
-                c.drawImage(
-                    tmp_path, MARGIN, page_h - HEADER_H - chunk_h_pt - 5,
-                    width=avail_w, height=chunk_h_pt, preserveAspectRatio=True, mask="auto"
-                )
-                part_title = title if n_chunks == 1 else f"{title} (part {chunk + 1}/{n_chunks})"
-                draw_header(c, page_w, page_h, part_title, route, i, total)
-                draw_footer(c, page_w, i, total)
-                c.showPage()
-                os.remove(tmp_path)
+        c.setPageSize((page_w, page_h))
+        c.drawImage(
+            f, MARGIN, FOOTER_H + 5,
+            width=avail_w, height=scaled_h, preserveAspectRatio=True, mask="auto"
+        )
+        draw_header(c, page_w, page_h, title, route, i, total)
+        draw_footer(c, page_w, i, total)
+        c.showPage()
 
     c.save()
-    print(f"Wrote {OUTPUT} ({total} screenshots)")
+    print(f"Wrote {OUTPUT} ({total} screenshots, one page each — no splitting)")
 
 
 if __name__ == "__main__":

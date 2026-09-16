@@ -34,3 +34,6 @@ next-env.d.ts
 /.agents/
 /.claude/skills/
 /skills-lock.json
+
+# Playwright MCP's own local console/snapshot logs (used to capture review screenshots)
+/.playwright-mcp/
