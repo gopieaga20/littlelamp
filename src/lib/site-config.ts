@@ -7,7 +7,7 @@ export const siteConfig = {
   tagline: "Empowering Every Child to Their Highest Potential & Achieve Greatness",
   description:
     "Personalized study-habit coaching, board-exam prep, and career counseling for Class 2–12 students in India.",
-  url: "https://littlelamp.example.com", // TODO: set production domain
+  url: "https://littlelamp.co.in",
   phone: "+91 94440 86921",
   whatsappNumber: "919444086921",
   email: "littlelamp1001@gmail.com",

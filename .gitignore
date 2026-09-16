@@ -24,9 +24,10 @@ next-env.d.ts
 # prisma
 /prisma/*.db
 
-# generated review deliverables (regenerate via scripts/build_review_pdf.py)
+# generated marketing/review deliverables (not app source)
 /review-screenshots/
 /LittleLamp-Website-Review.pdf
+/social/
 .vercel
 .env*
 

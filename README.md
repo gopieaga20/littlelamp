@@ -66,7 +66,8 @@ No user-auth tables exist — the requirements explicitly rule out parent/studen
 These are stubbed with clear `TODO` comments so the app runs today and only needs config, not
 code changes, once accounts exist:
 
-- `src/lib/site-config.ts` — Cal.com booking URL, social links, production domain (`url`), address
+- `src/lib/site-config.ts` — Cal.com booking URL, social links, address
+  (`url` is now the real domain, `littlelamp.co.in`)
   (phone/email/WhatsApp are now real)
 - `src/lib/notify.ts` — Resend/SendGrid API key for lead-notification emails
 - GA4 / Meta Pixel — not yet wired in; add via `@next/third-parties` in `src/app/layout.tsx` once
